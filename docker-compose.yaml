@@ -1,6 +1,6 @@
 services:
   app:
-    build: .
+    image: karthiq18/old-app:${GITHUB_SHA:0:7}
     ports:
       - "5002:5000"
     environment:
