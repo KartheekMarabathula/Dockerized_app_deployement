@@ -21,6 +21,27 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: push to docker hub
         run: docker push karthiq18/old-app:${GITHUB_SHA:0:7}
+      - name: copying only compose file
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST  }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "Docker-compose.yaml"
+          target: "/home/ubuntu/old-app"
+      - name: Deploy on Ec2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          envs: GITHUB_SHA
+          script: |
+            SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
+            cd /home/ubuntu/old-app
+            Docker-compose down
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/old-app:$SHORT_SHA
+            Docker-compose up -d
         
       
             
