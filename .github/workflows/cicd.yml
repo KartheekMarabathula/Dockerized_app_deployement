@@ -29,15 +29,16 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "docker-compose.yaml"
           target: "/home/ubuntu/old-app"
+      - name: Set SHORT_SHA
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV 
       - name: Deploy on Ec2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          envs: GITHUB_SHA
           script: |
-            SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
+            export SHORT_SHA=${SHORT_SHA}
             cd /home/ubuntu/old-app
             docker-compose down
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/old-app:$SHORT_SHA
