@@ -27,7 +27,7 @@ jobs:
           host: ${{ secrets.EC2_HOST  }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "docker-compose.yaml"
+          source: "Docker-compose.yaml"
           target: "/home/ubuntu/old-app"
       - name: Deploy on Ec2
         uses: appleboy/ssh-action@master
@@ -39,9 +39,9 @@ jobs:
           script: |
             SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
             cd /home/ubuntu/old-app
-            docker-compose down
+            Docker-compose down
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/old-app:$SHORT_SHA
-            docker-compose up -d
+            Docker-compose up -d
         
       
             
