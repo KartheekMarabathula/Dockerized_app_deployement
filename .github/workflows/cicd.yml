@@ -37,8 +37,9 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
+          envs: SHORT_SHA
           script: |
-            export SHORT_SHA=${SHORT_SHA}
+            echo "SHORT_SHA received: $SHORT_SHA"
             cd /home/ubuntu/old-app
             docker-compose down
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/old-app:$SHORT_SHA
