@@ -1,1 +1,27 @@
+name: ci cd pipeline with compose
+
+on:
+  push:
+    branches:
+      main
+
+jobs:
+  deploy-compose-on-ec2:
+    runs-on:
+      ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v6
+      - name: build Docker image
+        run: docker build -t karthiq18/old-app:${ GUTHUB_SHA:0:7 }
+      - name: login to docker hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: push to docker hub
+        run: docker push karthiq18/old-app:${ GITHUB_SHA:0:7 }
+        
+      
+            
 
