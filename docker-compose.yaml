@@ -1,6 +1,6 @@
 services:
   app:
-    image: karthiq18/old-app:${GITHUB_SHA:0:7}
+    image: karthiq18/old-app:$${SHORT_SHA}
     ports:
       - "5002:5000"
     environment:
