@@ -3,7 +3,7 @@ services:
   app:
     build: .
     ports:
-      - "5000:5000"
+      - "5002:5000"
     environment:
       - MYSQL_HOST=${MYSQL_HOST}
       - MYSQL_USER=${MYSQL_USER}
@@ -11,6 +11,7 @@ services:
       - MYSQL_DB=${MYSQL_DB}
     depends_on:
       - db
+    restart: always
 
   db:
     image: mysql:latest
@@ -20,16 +21,17 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DB=${MYSQL_DB}
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - db_data:/var/lib/mysql
       - ./message.sql:/docker-entrypoint-initdb.d/message.sql
+    restart: always
 
   db-admin:
     image: phpmyadmin/phpmyadmin
     restart: always
     ports:
-      - "8080:80"
+      - "8082:80"
     environment:
       - PMA_HOST=db  # Match your MySQL service name
       - MYSQL_ROOT_PASSWORD=${ROOT_PASS}
@@ -37,4 +39,5 @@ services:
       - db
 
 volumes:
+
   db_data:
